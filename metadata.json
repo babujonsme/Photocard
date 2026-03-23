@@ -1,0 +1,5 @@
+{
+  "name": "Photo Card Generator",
+  "description": "A web application to create and download custom photo cards with images and text.",
+  "requestFramePermissions": []
+}
