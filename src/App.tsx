@@ -3,7 +3,7 @@ import { toPng } from 'html-to-image';
 import { Upload, Download, Image as ImageIcon, Sparkles, Move, Settings2, Trash2 } from 'lucide-react';
 
 export default function App() {
-  const [template, setTemplate] = useState<string>('https://i.imgur.com/INDbdlr.png');
+  const [template, setTemplate] = useState<string>('https://i.imgur.com/mhoc5JH.png');
   const [photo, setPhoto] = useState<string | null>(null);
   
   // Text states
