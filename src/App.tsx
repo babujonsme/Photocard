@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { toPng } from 'html-to-image';
-import { Upload, Download, Image as ImageIcon, Sparkles, Move, Settings2, Trash2 } from 'lucide-react';
+import { Upload, Download, Image as ImageIcon, Move, Settings2, Trash2, Edit3, MapPin, Type, SlidersHorizontal } from 'lucide-react';
 
 export default function App() {
   const [template, setTemplate] = useState<string>('https://i.imgur.com/mhoc5JH.png');
@@ -149,144 +149,106 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 py-8 px-4 sm:px-6 lg:px-8 font-sans">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 py-8 px-4 sm:px-6 lg:px-8 font-sans selection:bg-red-100 selection:text-red-900">
       <div className="max-w-7xl mx-auto">
-        <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 flex items-center justify-center gap-3">
-            <Sparkles className="text-red-600" size={28} />
-            দৈনিক কাগজের ডাক
-          </h1>
-          <p className="mt-2 text-gray-600">তৈরিতে: মোঃ আল আমিন বাবু (কালের কণ্ঠ)</p>
+        {/* Header Section */}
+        <div className="text-center mb-10 space-y-3">
+          <div className="inline-block">
+            <h1 className="text-4xl md:text-5xl font-extrabold text-slate-900 tracking-tight">
+              দৈনিক কাগজের ডাক
+            </h1>
+            <div className="h-1.5 w-1/2 bg-red-600 mx-auto mt-4 rounded-full"></div>
+          </div>
+          <p className="text-slate-500 font-medium text-sm md:text-base">
+            তৈরিতে: <span className="text-slate-700 font-semibold">মোঃ আল আমিন বাবু</span> (কালের কণ্ঠ)
+          </p>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-          {/* Controls Section */}
-          <div className="lg:col-span-5 space-y-6 bg-white p-6 rounded-2xl shadow-sm border border-gray-200 h-fit order-2 lg:order-1">
+        <div className="flex flex-col lg:grid lg:grid-cols-12 gap-8 lg:gap-12 items-start">
+          {/* Section 1: Text Inputs (Mobile: 1st, Desktop: Left Column Top) */}
+          <div className="order-1 lg:order-none lg:col-span-5 lg:col-start-1 lg:row-start-1 w-full space-y-8 bg-white/80 backdrop-blur-xl p-6 md:p-8 rounded-3xl shadow-xl border border-slate-200/60 relative overflow-hidden">
             
-            {/* File Uploads */}
-            <div className="grid grid-cols-1 gap-4">
-              {/* Photo Upload */}
-              <div className="space-y-2">
-                <label className="block text-sm font-semibold text-gray-700">১. মূল ছবি</label>
-                <label className="flex flex-col items-center justify-center w-full h-24 border-2 border-dashed border-gray-300 rounded-xl hover:border-blue-500 hover:bg-blue-50 cursor-pointer transition-all">
-                  <ImageIcon className="w-6 h-6 text-gray-400 mb-1" />
-                  <span className="text-xs text-gray-600 font-medium">ছবি আপলোড করুন</span>
-                  <input type="file" accept="image/*" className="hidden" onChange={handlePhotoUpload} />
-                </label>
-              </div>
-            </div>
+            {/* Decorative background element */}
+            <div className="absolute top-0 right-0 -mt-4 -mr-4 w-24 h-24 bg-red-50 rounded-full blur-2xl opacity-60 pointer-events-none"></div>
 
-            {/* Photo Adjustments */}
-            <div className="bg-gray-50 p-4 rounded-xl border border-gray-100 space-y-4">
-              <div className="flex items-center gap-2 mb-2">
-                <Settings2 className="w-4 h-4 text-gray-600" />
-                <h3 className="text-sm font-semibold text-gray-700">ছবি পজিশন ও সাইজ</h3>
+            {/* Section 1: Text Inputs */}
+            <div className="space-y-5 relative z-10">
+              <div className="flex items-center gap-2 border-b border-slate-100 pb-3">
+                <div className="bg-red-100 p-2 rounded-lg text-red-600">
+                  <Edit3 size={18} />
+                </div>
+                <h3 className="text-lg font-bold text-slate-800">১. লেখা পরিবর্তন করুন</h3>
               </div>
               
-              <div>
-                <label className="flex justify-between text-xs font-medium text-gray-600 mb-1">
-                  <span>জুম (Scale)</span>
-                  <span>{photoScale}%</span>
-                </label>
-                <input type="range" min="10" max="300" value={photoScale} onChange={(e) => setPhotoScale(Number(e.target.value))} className="w-full h-1.5 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-blue-600" />
-              </div>
-              
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label className="flex justify-between text-xs font-medium text-gray-600 mb-1">
-                    <span>ডানে/বামে (X)</span>
+              <div className="space-y-4">
+                <div className="space-y-1.5">
+                  <label className="flex items-center gap-1.5 text-sm font-medium text-slate-700">
+                    <MapPin size={14} className="text-slate-400" />
+                    স্থান <span className="text-slate-400 text-xs font-normal">(তারিখ অটোমেটিক)</span>
                   </label>
-                  <input type="range" min="0" max="100" value={photoX} onChange={(e) => setPhotoX(Number(e.target.value))} className="w-full h-1.5 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-blue-600" />
-                </div>
-                <div>
-                  <label className="flex justify-between text-xs font-medium text-gray-600 mb-1">
-                    <span>উপরে/নিচে (Y)</span>
-                  </label>
-                  <input type="range" min="0" max="100" value={photoY} onChange={(e) => setPhotoY(Number(e.target.value))} className="w-full h-1.5 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-blue-600" />
-                </div>
-              </div>
-            </div>
-
-            {/* Text Inputs */}
-            <div className="space-y-4 pt-2">
-              <h3 className="text-sm font-semibold text-gray-700 border-b pb-2">২. লেখা পরিবর্তন করুন</h3>
-              
-              <div className="grid grid-cols-1 gap-4">
-                <div>
-                  <label className="block text-xs font-medium text-gray-600 mb-1">স্থান (তারিখ অটোমেটিক)</label>
-                  <input type="text" value={locationName} onChange={(e) => setLocationName(e.target.value)} className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 outline-none" />
-                </div>
-              </div>
-
-              <div>
-                <label className="block text-xs font-medium text-gray-600 mb-1">প্রধান শিরোনাম</label>
-                <input type="text" value={headline} onChange={(e) => setHeadline(e.target.value)} className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 outline-none" />
-              </div>
-            </div>
-
-            {/* Text Adjustments */}
-            <div className="bg-gray-50 p-4 rounded-xl border border-gray-100 space-y-4 mt-6">
-              <div className="flex items-center gap-2 mb-2">
-                <Settings2 className="w-4 h-4 text-gray-600" />
-                <h3 className="text-sm font-semibold text-gray-700">শিরোনামের পজিশন ও সাইজ</h3>
-              </div>
-              
-              <div>
-                <label className="flex justify-between text-xs font-medium text-gray-600 mb-1">
-                  <span>সাইজ (Scale)</span>
-                  <span>{textScale}%</span>
-                </label>
-                <input type="range" min="50" max="200" value={textScale} onChange={(e) => setTextScale(Number(e.target.value))} className="w-full h-1.5 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-red-600" />
-              </div>
-              
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label className="flex justify-between text-xs font-medium text-gray-600 mb-1">
-                    <span>ডানে/বামে (X)</span>
-                  </label>
-                  <input type="range" min="0" max="100" value={textX} onChange={(e) => setTextX(Number(e.target.value))} className="w-full h-1.5 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-red-600" />
-                </div>
-                <div>
-                  <label className="flex justify-between text-xs font-medium text-gray-600 mb-1">
-                    <span>উপরে/নিচে (Y)</span>
-                  </label>
-                  <input type="range" min="0" max="100" value={textY} onChange={(e) => setTextY(Number(e.target.value))} className="w-full h-1.5 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-red-600" />
-                </div>
-              </div>
-            </div>
-
-            {/* Testing Section */}
-            <div className="space-y-4 pt-4 border-t border-gray-200 mt-6">
-              <h3 className="text-sm font-semibold text-red-600 flex items-center gap-2">
-                <Settings2 size={16} /> টেস্টিং অপশন (Vercel এর জন্য)
-              </h3>
-              <div className="space-y-3">
-                <div>
-                  <label className="block text-xs font-medium text-gray-600 mb-1">টেম্পলেট লিংক (URL)</label>
                   <input 
                     type="text" 
-                    placeholder="https://example.com/image.png"
-                    onChange={(e) => setTemplate(e.target.value)} 
-                    className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 outline-none" 
+                    value={locationName} 
+                    onChange={(e) => setLocationName(e.target.value)} 
+                    className="w-full px-4 py-2.5 text-sm bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-red-500/20 focus:border-red-500 outline-none transition-all" 
+                    placeholder="স্থানের নাম লিখুন"
                   />
                 </div>
-                <div>
-                  <label className="block text-xs font-medium text-gray-600 mb-1">অথবা টেম্পলেট আপলোড করুন</label>
-                  <input 
-                    type="file" 
-                    accept="image/png, image/jpeg"
-                    onChange={handleTemplateUpload} 
-                    className="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-red-50 file:text-red-700 hover:file:bg-red-100" 
+
+                <div className="space-y-1.5">
+                  <label className="flex items-center gap-1.5 text-sm font-medium text-slate-700">
+                    <Type size={14} className="text-slate-400" />
+                    প্রধান শিরোনাম
+                  </label>
+                  <textarea 
+                    value={headline} 
+                    onChange={(e) => setHeadline(e.target.value)} 
+                    rows={3}
+                    className="w-full px-4 py-2.5 text-sm bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-red-500/20 focus:border-red-500 outline-none transition-all resize-none" 
+                    placeholder="প্রধান শিরোনাম লিখুন"
                   />
+                </div>
+              </div>
+
+              {/* Text Adjustments */}
+              <div className="bg-slate-50/80 p-5 rounded-2xl border border-slate-100 space-y-5">
+                <div className="flex items-center gap-2 mb-1">
+                  <Settings2 className="w-4 h-4 text-slate-500" />
+                  <h4 className="text-sm font-semibold text-slate-700">শিরোনামের পজিশন ও সাইজ</h4>
+                </div>
+                
+                <div className="space-y-4">
+                  <div>
+                    <label className="flex justify-between text-xs font-medium text-slate-600 mb-2">
+                      <span>সাইজ (Scale)</span>
+                      <span className="bg-white px-2 py-0.5 rounded text-slate-800 shadow-sm border border-slate-100">{textScale}%</span>
+                    </label>
+                    <input type="range" min="50" max="200" value={textScale} onChange={(e) => setTextScale(Number(e.target.value))} className="w-full h-1.5 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-red-600" />
+                  </div>
+                  
+                  <div className="grid grid-cols-2 gap-6">
+                    <div>
+                      <label className="flex justify-between text-xs font-medium text-slate-600 mb-2">
+                        <span>ডানে/বামে (X)</span>
+                      </label>
+                      <input type="range" min="0" max="100" value={textX} onChange={(e) => setTextX(Number(e.target.value))} className="w-full h-1.5 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-red-600" />
+                    </div>
+                    <div>
+                      <label className="flex justify-between text-xs font-medium text-slate-600 mb-2">
+                        <span>উপরে/নিচে (Y)</span>
+                      </label>
+                      <input type="range" min="0" max="100" value={textY} onChange={(e) => setTextY(Number(e.target.value))} className="w-full h-1.5 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-red-600" />
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
 
           </div>
 
-          {/* Preview Section */}
-          <div className="lg:col-span-7 flex flex-col items-center order-1 lg:order-2 lg:sticky lg:top-8 h-fit">
-            <div className="w-full max-w-[540px] relative shadow-2xl rounded-lg overflow-hidden border border-gray-200 bg-white">
+          {/* Preview Section (Mobile: 2nd, Desktop: Right Column) */}
+          <div className="order-2 lg:order-none lg:col-span-7 lg:col-start-6 lg:row-start-1 lg:row-span-2 w-full flex flex-col items-center lg:sticky lg:top-8 h-fit">
+            <div className="w-full max-w-[540px] relative shadow-2xl shadow-slate-200/50 rounded-2xl overflow-hidden border border-slate-200/60 bg-white ring-1 ring-slate-900/5">
               
               {/* The Card to be captured */}
               <div 
@@ -361,18 +323,79 @@ export default function App() {
             <button
               onClick={handleDownload}
               disabled={isDownloading}
-              className="mt-8 w-full max-w-[540px] py-4 px-6 bg-red-600 hover:bg-red-700 text-white rounded-xl font-bold text-lg shadow-lg shadow-red-200 transition-all flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed"
+              className="mt-8 w-full max-w-[540px] py-4 px-6 bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white rounded-2xl font-bold text-lg shadow-xl shadow-red-600/20 transition-all flex items-center justify-center gap-3 active:scale-[0.98] disabled:opacity-70 disabled:cursor-not-allowed border border-red-500/50"
             >
               {isDownloading ? (
-                <span className="animate-pulse">ডাউনলোড হচ্ছে...</span>
+                <>
+                  <div className="w-6 h-6 border-3 border-white/30 border-t-white rounded-full animate-spin" />
+                  <span>ডাউনলোড হচ্ছে...</span>
+                </>
               ) : (
                 <>
-                  <Download size={24} />
-                  ফাইনাল কার্ড ডাউনলোড করুন
+                  <Download size={24} className="animate-bounce-subtle" />
+                  <span>ফাইনাল কার্ড ডাউনলোড করুন</span>
                 </>
               )}
             </button>
           </div>
+
+          {/* Section 2: Image Upload (Mobile: 3rd, Desktop: Left Column Bottom) */}
+          <div className="order-3 lg:order-none lg:col-span-5 lg:col-start-1 lg:row-start-2 w-full space-y-8 bg-white/80 backdrop-blur-xl p-6 md:p-8 rounded-3xl shadow-xl border border-slate-200/60 relative overflow-hidden">
+            {/* Decorative background element */}
+            <div className="absolute top-0 right-0 -mt-4 -mr-4 w-24 h-24 bg-blue-50 rounded-full blur-2xl opacity-60 pointer-events-none"></div>
+
+            <div className="space-y-5 relative z-10">
+              <div className="flex items-center gap-2 border-b border-slate-100 pb-3">
+                <div className="bg-blue-100 p-2 rounded-lg text-blue-600">
+                  <ImageIcon size={18} />
+                </div>
+                <h3 className="text-lg font-bold text-slate-800">২. মূল ছবি</h3>
+              </div>
+              
+              <label className="group flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-slate-300 rounded-2xl hover:border-blue-500 hover:bg-blue-50/50 cursor-pointer transition-all duration-200 ease-in-out">
+                <div className="bg-white p-3 rounded-full shadow-sm group-hover:scale-110 transition-transform duration-200 mb-3">
+                  <Upload className="w-5 h-5 text-blue-500" />
+                </div>
+                <span className="text-sm text-slate-600 font-medium group-hover:text-blue-600 transition-colors">ক্লিক করে ছবি আপলোড করুন</span>
+                <span className="text-xs text-slate-400 mt-1">PNG, JPG (Max 5MB)</span>
+                <input type="file" accept="image/*" className="hidden" onChange={handlePhotoUpload} />
+              </label>
+
+              {/* Photo Adjustments */}
+              <div className="bg-slate-50/80 p-5 rounded-2xl border border-slate-100 space-y-5">
+                <div className="flex items-center gap-2 mb-1">
+                  <SlidersHorizontal className="w-4 h-4 text-slate-500" />
+                  <h4 className="text-sm font-semibold text-slate-700">ছবি পজিশন ও সাইজ</h4>
+                </div>
+                
+                <div className="space-y-4">
+                  <div>
+                    <label className="flex justify-between text-xs font-medium text-slate-600 mb-2">
+                      <span>জুম (Scale)</span>
+                      <span className="bg-white px-2 py-0.5 rounded text-slate-800 shadow-sm border border-slate-100">{photoScale}%</span>
+                    </label>
+                    <input type="range" min="10" max="300" value={photoScale} onChange={(e) => setPhotoScale(Number(e.target.value))} className="w-full h-1.5 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-blue-600" />
+                  </div>
+                  
+                  <div className="grid grid-cols-2 gap-6">
+                    <div>
+                      <label className="flex justify-between text-xs font-medium text-slate-600 mb-2">
+                        <span>ডানে/বামে (X)</span>
+                      </label>
+                      <input type="range" min="0" max="100" value={photoX} onChange={(e) => setPhotoX(Number(e.target.value))} className="w-full h-1.5 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-blue-600" />
+                    </div>
+                    <div>
+                      <label className="flex justify-between text-xs font-medium text-slate-600 mb-2">
+                        <span>উপরে/নিচে (Y)</span>
+                      </label>
+                      <input type="range" min="0" max="100" value={photoY} onChange={(e) => setPhotoY(Number(e.target.value))} className="w-full h-1.5 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-blue-600" />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
         </div>
       </div>
     </div>
