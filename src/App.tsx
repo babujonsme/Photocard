@@ -9,6 +9,30 @@ export default function App() {
   // Text states
   const [locationName, setLocationName] = useState('পটুয়াখালী');
   const [headline, setHeadline] = useState('কলাপাড়ায় উন্নত বীজ ও আধুনিক কৃষি প্রযুক্তি নিয়ে মাঠ দিবস অনুষ্ঠিত');
+  const [locationHistory, setLocationHistory] = useState<string[]>(() => {
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem('newsCardLocationHistory');
+      if (saved) {
+        try {
+          return JSON.parse(saved);
+        } catch (e) {
+          return [];
+        }
+      }
+    }
+    return ['পটুয়াখালী', 'ঢাকা', 'বরিশাল', 'খুলনা', 'রাজশাহী', 'চট্টগ্রাম', 'সিলেট', 'রংপুর', 'ময়মনসিংহ'];
+  });
+
+  useEffect(() => {
+    localStorage.setItem('newsCardLocationHistory', JSON.stringify(locationHistory));
+  }, [locationHistory]);
+
+  const handleLocationBlur = () => {
+    const trimmed = locationName.trim();
+    if (trimmed && !locationHistory.includes(trimmed)) {
+      setLocationHistory(prev => [trimmed, ...prev].slice(0, 20));
+    }
+  };
   
   // Photo positioning states
   const [photoScale, setPhotoScale] = useState(100);
@@ -188,11 +212,18 @@ export default function App() {
                   </label>
                   <input 
                     type="text" 
+                    list="location-history"
                     value={locationName} 
                     onChange={(e) => setLocationName(e.target.value)} 
+                    onBlur={handleLocationBlur}
                     className="w-full px-4 py-2.5 text-sm bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-red-500/20 focus:border-red-500 outline-none transition-all" 
                     placeholder="স্থানের নাম লিখুন"
                   />
+                  <datalist id="location-history">
+                    {locationHistory.map((loc, idx) => (
+                      <option key={idx} value={loc} />
+                    ))}
+                  </datalist>
                 </div>
 
                 <div className="space-y-1.5">
