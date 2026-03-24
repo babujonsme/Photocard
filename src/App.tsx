@@ -172,6 +172,26 @@ export default function App() {
     }
   };
 
+  const DownloadButton = ({ className = "" }: { className?: string }) => (
+    <button
+      onClick={handleDownload}
+      disabled={isDownloading}
+      className={`w-full max-w-[540px] py-4 px-6 bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white rounded-2xl font-bold text-lg shadow-xl shadow-red-600/20 transition-all flex items-center justify-center gap-3 active:scale-[0.98] disabled:opacity-70 disabled:cursor-not-allowed border border-red-500/50 ${className}`}
+    >
+      {isDownloading ? (
+        <>
+          <div className="w-6 h-6 border-3 border-white/30 border-t-white rounded-full animate-spin" />
+          <span>ডাউনলোড হচ্ছে...</span>
+        </>
+      ) : (
+        <>
+          <Download size={24} className="animate-bounce-subtle" />
+          <span>ফাইনাল কার্ড ডাউনলোড করুন</span>
+        </>
+      )}
+    </button>
+  );
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 py-8 px-4 sm:px-6 lg:px-8 font-sans selection:bg-red-100 selection:text-red-900">
       <div className="max-w-7xl mx-auto">
@@ -277,8 +297,65 @@ export default function App() {
 
           </div>
 
+          {/* Section 2: Image Upload (Mobile: 3rd, Desktop: Left Column Bottom) */}
+          <div className="order-3 lg:order-none lg:col-span-5 lg:col-start-1 lg:row-start-2 w-full space-y-8 bg-white/80 backdrop-blur-xl p-6 md:p-8 rounded-3xl shadow-xl border border-slate-200/60 relative overflow-hidden">
+            {/* Decorative background element */}
+            <div className="absolute top-0 right-0 -mt-4 -mr-4 w-24 h-24 bg-blue-50 rounded-full blur-2xl opacity-60 pointer-events-none"></div>
+
+            <div className="space-y-5 relative z-10">
+              <div className="flex items-center gap-2 border-b border-slate-100 pb-3">
+                <div className="bg-blue-100 p-2 rounded-lg text-blue-600">
+                  <ImageIcon size={18} />
+                </div>
+                <h3 className="text-lg font-bold text-slate-800">২. মূল ছবি</h3>
+              </div>
+              
+              <label className="group flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-slate-300 rounded-2xl hover:border-blue-500 hover:bg-blue-50/50 cursor-pointer transition-all duration-200 ease-in-out">
+                <div className="bg-white p-3 rounded-full shadow-sm group-hover:scale-110 transition-transform duration-200 mb-3">
+                  <Upload className="w-5 h-5 text-blue-500" />
+                </div>
+                <span className="text-sm text-slate-600 font-medium group-hover:text-blue-600 transition-colors">ক্লিক করে ছবি আপলোড করুন</span>
+                <span className="text-xs text-slate-400 mt-1">PNG, JPG (Max 5MB)</span>
+                <input type="file" accept="image/*" className="hidden" onChange={handlePhotoUpload} />
+              </label>
+
+              {/* Photo Adjustments */}
+              <div className="bg-slate-50/80 p-5 rounded-2xl border border-slate-100 space-y-5">
+                <div className="flex items-center gap-2 mb-1">
+                  <SlidersHorizontal className="w-4 h-4 text-slate-500" />
+                  <h4 className="text-sm font-semibold text-slate-700">ছবি পজিশন ও সাইজ</h4>
+                </div>
+                
+                <div className="space-y-4">
+                  <div>
+                    <label className="flex justify-between text-xs font-medium text-slate-600 mb-2">
+                      <span>জুম (Scale)</span>
+                      <span className="bg-white px-2 py-0.5 rounded text-slate-800 shadow-sm border border-slate-100">{photoScale}%</span>
+                    </label>
+                    <input type="range" min="10" max="300" value={photoScale} onChange={(e) => setPhotoScale(Number(e.target.value))} className="w-full h-1.5 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-blue-600" />
+                  </div>
+                  
+                  <div className="grid grid-cols-2 gap-6">
+                    <div>
+                      <label className="flex justify-between text-xs font-medium text-slate-600 mb-2">
+                        <span>ডানে/বামে (X)</span>
+                      </label>
+                      <input type="range" min="0" max="100" value={photoX} onChange={(e) => setPhotoX(Number(e.target.value))} className="w-full h-1.5 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-blue-600" />
+                    </div>
+                    <div>
+                      <label className="flex justify-between text-xs font-medium text-slate-600 mb-2">
+                        <span>উপরে/নিচে (Y)</span>
+                      </label>
+                      <input type="range" min="0" max="100" value={photoY} onChange={(e) => setPhotoY(Number(e.target.value))} className="w-full h-1.5 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-blue-600" />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
           {/* Preview Section (Mobile: 2nd, Desktop: Right Column) */}
-          <div className="order-2 lg:order-none lg:col-span-7 lg:col-start-6 lg:row-start-1 lg:row-span-2 w-full flex flex-col items-center lg:sticky lg:top-8 h-fit">
+          <div className="order-2 lg:order-none lg:col-span-7 lg:col-start-6 lg:row-start-1 lg:row-span-2 w-full flex flex-col items-center lg:sticky lg:top-8 h-fit z-10">
             <div className="w-full max-w-[540px] relative shadow-2xl shadow-slate-200/50 rounded-2xl overflow-hidden border border-slate-200/60 bg-white ring-1 ring-slate-900/5">
               
               {/* The Card to be captured */}
@@ -350,81 +427,13 @@ export default function App() {
               </div>
             </div>
 
-            {/* Download Button */}
-            <button
-              onClick={handleDownload}
-              disabled={isDownloading}
-              className="mt-8 w-full max-w-[540px] py-4 px-6 bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white rounded-2xl font-bold text-lg shadow-xl shadow-red-600/20 transition-all flex items-center justify-center gap-3 active:scale-[0.98] disabled:opacity-70 disabled:cursor-not-allowed border border-red-500/50"
-            >
-              {isDownloading ? (
-                <>
-                  <div className="w-6 h-6 border-3 border-white/30 border-t-white rounded-full animate-spin" />
-                  <span>ডাউনলোড হচ্ছে...</span>
-                </>
-              ) : (
-                <>
-                  <Download size={24} className="animate-bounce-subtle" />
-                  <span>ফাইনাল কার্ড ডাউনলোড করুন</span>
-                </>
-              )}
-            </button>
+            {/* Desktop Download Button */}
+            <DownloadButton className="hidden lg:flex mt-8" />
           </div>
 
-          {/* Section 2: Image Upload (Mobile: 3rd, Desktop: Left Column Bottom) */}
-          <div className="order-3 lg:order-none lg:col-span-5 lg:col-start-1 lg:row-start-2 w-full space-y-8 bg-white/80 backdrop-blur-xl p-6 md:p-8 rounded-3xl shadow-xl border border-slate-200/60 relative overflow-hidden">
-            {/* Decorative background element */}
-            <div className="absolute top-0 right-0 -mt-4 -mr-4 w-24 h-24 bg-blue-50 rounded-full blur-2xl opacity-60 pointer-events-none"></div>
-
-            <div className="space-y-5 relative z-10">
-              <div className="flex items-center gap-2 border-b border-slate-100 pb-3">
-                <div className="bg-blue-100 p-2 rounded-lg text-blue-600">
-                  <ImageIcon size={18} />
-                </div>
-                <h3 className="text-lg font-bold text-slate-800">২. মূল ছবি</h3>
-              </div>
-              
-              <label className="group flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-slate-300 rounded-2xl hover:border-blue-500 hover:bg-blue-50/50 cursor-pointer transition-all duration-200 ease-in-out">
-                <div className="bg-white p-3 rounded-full shadow-sm group-hover:scale-110 transition-transform duration-200 mb-3">
-                  <Upload className="w-5 h-5 text-blue-500" />
-                </div>
-                <span className="text-sm text-slate-600 font-medium group-hover:text-blue-600 transition-colors">ক্লিক করে ছবি আপলোড করুন</span>
-                <span className="text-xs text-slate-400 mt-1">PNG, JPG (Max 5MB)</span>
-                <input type="file" accept="image/*" className="hidden" onChange={handlePhotoUpload} />
-              </label>
-
-              {/* Photo Adjustments */}
-              <div className="bg-slate-50/80 p-5 rounded-2xl border border-slate-100 space-y-5">
-                <div className="flex items-center gap-2 mb-1">
-                  <SlidersHorizontal className="w-4 h-4 text-slate-500" />
-                  <h4 className="text-sm font-semibold text-slate-700">ছবি পজিশন ও সাইজ</h4>
-                </div>
-                
-                <div className="space-y-4">
-                  <div>
-                    <label className="flex justify-between text-xs font-medium text-slate-600 mb-2">
-                      <span>জুম (Scale)</span>
-                      <span className="bg-white px-2 py-0.5 rounded text-slate-800 shadow-sm border border-slate-100">{photoScale}%</span>
-                    </label>
-                    <input type="range" min="10" max="300" value={photoScale} onChange={(e) => setPhotoScale(Number(e.target.value))} className="w-full h-1.5 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-blue-600" />
-                  </div>
-                  
-                  <div className="grid grid-cols-2 gap-6">
-                    <div>
-                      <label className="flex justify-between text-xs font-medium text-slate-600 mb-2">
-                        <span>ডানে/বামে (X)</span>
-                      </label>
-                      <input type="range" min="0" max="100" value={photoX} onChange={(e) => setPhotoX(Number(e.target.value))} className="w-full h-1.5 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-blue-600" />
-                    </div>
-                    <div>
-                      <label className="flex justify-between text-xs font-medium text-slate-600 mb-2">
-                        <span>উপরে/নিচে (Y)</span>
-                      </label>
-                      <input type="range" min="0" max="100" value={photoY} onChange={(e) => setPhotoY(Number(e.target.value))} className="w-full h-1.5 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-blue-600" />
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
+          {/* Mobile Download Button */}
+          <div className="order-4 lg:hidden w-full flex justify-center mt-2">
+            <DownloadButton />
           </div>
 
         </div>
