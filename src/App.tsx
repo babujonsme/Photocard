@@ -69,47 +69,147 @@ export default function App() {
   }, [textScale, textX, textY]);
 
   const [isDraggingText, setIsDraggingText] = useState(false);
+  const [isPinchingText, setIsPinchingText] = useState(false);
+  const textPinchRef = useRef<{ dist: number; scale: number } | null>(null);
+
+  const [isDraggingPhoto, setIsDraggingPhoto] = useState(false);
+  const [isPinchingPhoto, setIsPinchingPhoto] = useState(false);
+  const photoPinchRef = useRef<{ dist: number; scale: number } | null>(null);
 
   const handleTextMouseDown = (e: React.MouseEvent) => {
     e.preventDefault();
+    e.stopPropagation();
     setIsDraggingText(true);
   };
 
   const handleTextTouchStart = (e: React.TouchEvent) => {
-    setIsDraggingText(true);
+    e.stopPropagation();
+    if (e.touches.length === 2) {
+      const dist = Math.hypot(
+        e.touches[0].clientX - e.touches[1].clientX,
+        e.touches[0].clientY - e.touches[1].clientY
+      );
+      textPinchRef.current = { dist, scale: textScale };
+      setIsDraggingText(false);
+      setIsPinchingText(true);
+    } else if (e.touches.length === 1) {
+      setIsDraggingText(true);
+      setIsPinchingText(false);
+      textPinchRef.current = null;
+    }
   };
 
   const handleTextWheel = (e: React.WheelEvent) => {
     e.preventDefault();
+    e.stopPropagation();
     const delta = e.deltaY > 0 ? -5 : 5;
     setTextScale(prev => Math.max(50, Math.min(200, prev + delta)));
   };
 
+  const handlePhotoMouseDown = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDraggingPhoto(true);
+  };
+
+  const handlePhotoTouchStart = (e: React.TouchEvent) => {
+    e.stopPropagation();
+    if (e.touches.length === 2) {
+      const dist = Math.hypot(
+        e.touches[0].clientX - e.touches[1].clientX,
+        e.touches[0].clientY - e.touches[1].clientY
+      );
+      photoPinchRef.current = { dist, scale: photoScale };
+      setIsDraggingPhoto(false);
+      setIsPinchingPhoto(true);
+    } else if (e.touches.length === 1) {
+      setIsDraggingPhoto(true);
+      setIsPinchingPhoto(false);
+      photoPinchRef.current = null;
+    }
+  };
+
+  const handlePhotoWheel = (e: React.WheelEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    const delta = e.deltaY > 0 ? -5 : 5;
+    setPhotoScale(prev => Math.max(10, Math.min(300, prev + delta)));
+  };
+
   useEffect(() => {
-    const handleMove = (clientX: number, clientY: number) => {
-      if (!isDraggingText || !cardRef.current) return;
+    const handleMouseMove = (e: MouseEvent) => {
+      if (!cardRef.current) return;
       const rect = cardRef.current.getBoundingClientRect();
-      let x = ((clientX - rect.left) / rect.width) * 100;
-      let y = ((clientY - rect.top) / rect.height) * 100;
       
-      x = Math.max(0, Math.min(100, x));
-      y = Math.max(0, Math.min(100, y));
-
-      setTextX(Math.round(x));
-      setTextY(Math.round(y));
-    };
-
-    const handleMouseMove = (e: MouseEvent) => handleMove(e.clientX, e.clientY);
-    const handleTouchMove = (e: TouchEvent) => {
-      if (e.touches.length > 0) {
-        e.preventDefault(); // Prevent scrolling while dragging
-        handleMove(e.touches[0].clientX, e.touches[0].clientY);
+      if (isDraggingText) {
+        let x = ((e.clientX - rect.left) / rect.width) * 100;
+        let y = ((e.clientY - rect.top) / rect.height) * 100;
+        setTextX(Math.round(Math.max(0, Math.min(100, x))));
+        setTextY(Math.round(Math.max(0, Math.min(100, y))));
+      } else if (isDraggingPhoto) {
+        let x = ((e.clientX - rect.left) / rect.width) * 100;
+        let y = ((e.clientY - rect.top) / rect.height) * 100;
+        setPhotoX(Math.round(Math.max(0, Math.min(100, x))));
+        setPhotoY(Math.round(Math.max(0, Math.min(100, y))));
       }
     };
 
-    const handleEnd = () => setIsDraggingText(false);
+    const handleTouchMove = (e: TouchEvent) => {
+      if (!cardRef.current) return;
+      
+      if (isPinchingText && e.touches.length === 2 && textPinchRef.current) {
+        e.preventDefault();
+        const dist = Math.hypot(
+          e.touches[0].clientX - e.touches[1].clientX,
+          e.touches[0].clientY - e.touches[1].clientY
+        );
+        const scaleFactor = dist / textPinchRef.current.dist;
+        const newScale = Math.max(50, Math.min(200, textPinchRef.current.scale * scaleFactor));
+        setTextScale(Math.round(newScale));
+        return;
+      }
+      
+      if (isPinchingPhoto && e.touches.length === 2 && photoPinchRef.current) {
+        e.preventDefault();
+        const dist = Math.hypot(
+          e.touches[0].clientX - e.touches[1].clientX,
+          e.touches[0].clientY - e.touches[1].clientY
+        );
+        const scaleFactor = dist / photoPinchRef.current.dist;
+        const newScale = Math.max(10, Math.min(300, photoPinchRef.current.scale * scaleFactor));
+        setPhotoScale(Math.round(newScale));
+        return;
+      }
 
-    if (isDraggingText) {
+      if (e.touches.length === 1) {
+        const rect = cardRef.current.getBoundingClientRect();
+        let x = ((e.touches[0].clientX - rect.left) / rect.width) * 100;
+        let y = ((e.touches[0].clientY - rect.top) / rect.height) * 100;
+        
+        if (isDraggingText) {
+          e.preventDefault();
+          setTextX(Math.round(Math.max(0, Math.min(100, x))));
+          setTextY(Math.round(Math.max(0, Math.min(100, y))));
+        } else if (isDraggingPhoto) {
+          e.preventDefault();
+          setPhotoX(Math.round(Math.max(0, Math.min(100, x))));
+          setPhotoY(Math.round(Math.max(0, Math.min(100, y))));
+        }
+      }
+    };
+
+    const handleEnd = () => {
+      setIsDraggingText(false);
+      setIsDraggingPhoto(false);
+      setIsPinchingText(false);
+      setIsPinchingPhoto(false);
+      textPinchRef.current = null;
+      photoPinchRef.current = null;
+    };
+
+    const isActive = isDraggingText || isDraggingPhoto || isPinchingText || isPinchingPhoto;
+
+    if (isActive) {
       window.addEventListener('mousemove', handleMouseMove);
       window.addEventListener('mouseup', handleEnd);
       window.addEventListener('touchmove', handleTouchMove, { passive: false });
@@ -122,7 +222,7 @@ export default function App() {
       window.removeEventListener('touchmove', handleTouchMove);
       window.removeEventListener('touchend', handleEnd);
     };
-  }, [isDraggingText]);
+  }, [isDraggingText, isDraggingPhoto, isPinchingText, isPinchingPhoto]);
 
   const [isDownloading, setIsDownloading] = useState(false);
   const cardRef = useRef<HTMLDivElement>(null);
@@ -369,15 +469,19 @@ export default function App() {
                   <img 
                     src={photo} 
                     alt="Uploaded Photo" 
-                    className="absolute z-0 max-w-none"
+                    className="absolute z-0 max-w-none cursor-move pointer-events-auto"
                     style={{
                       width: `${photoScale}%`,
                       height: 'auto',
                       left: `${photoX}%`,
                       top: `${photoY}%`,
-                      transform: 'translate(-50%, -50%)'
+                      transform: 'translate(-50%, -50%)',
+                      touchAction: 'none'
                     }}
                     crossOrigin="anonymous"
+                    onMouseDown={handlePhotoMouseDown}
+                    onTouchStart={handlePhotoTouchStart}
+                    onWheel={handlePhotoWheel}
                   />
                 ) : (
                   <div className="absolute inset-0 flex flex-col items-center justify-center text-gray-400 z-0 bg-gray-200">
