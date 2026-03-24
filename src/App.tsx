@@ -1,10 +1,9 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { toPng } from 'html-to-image';
 import { Upload, Download, Image as ImageIcon, Sparkles, Move, Settings2, Trash2 } from 'lucide-react';
-import templateImg from './template.png';
 
 export default function App() {
-  const [template, setTemplate] = useState<string>(templateImg);
+  const [template, setTemplate] = useState<string>('https://i.imgur.com/INDbdlr.png');
   const [photo, setPhoto] = useState<string | null>(null);
   
   // Text states
