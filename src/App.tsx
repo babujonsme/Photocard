@@ -4,7 +4,7 @@ import { Upload, Download, Image as ImageIcon, Sparkles, Move, Settings2, Trash2
 import templateImg from './template.png';
 
 export default function App() {
-  const template = templateImg;
+  const [template, setTemplate] = useState<string>(templateImg);
   const [photo, setPhoto] = useState<string | null>(null);
   
   // Text states
@@ -115,6 +115,15 @@ export default function App() {
     if (file) {
       const reader = new FileReader();
       reader.onloadend = () => setPhoto(reader.result as string);
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleTemplateUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => setTemplate(reader.result as string);
       reader.readAsDataURL(file);
     }
   };
@@ -243,6 +252,33 @@ export default function App() {
                     <span>উপরে/নিচে (Y)</span>
                   </label>
                   <input type="range" min="0" max="100" value={textY} onChange={(e) => setTextY(Number(e.target.value))} className="w-full h-1.5 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-red-600" />
+                </div>
+              </div>
+            </div>
+
+            {/* Testing Section */}
+            <div className="space-y-4 pt-4 border-t border-gray-200 mt-6">
+              <h3 className="text-sm font-semibold text-red-600 flex items-center gap-2">
+                <Settings2 size={16} /> টেস্টিং অপশন (Vercel এর জন্য)
+              </h3>
+              <div className="space-y-3">
+                <div>
+                  <label className="block text-xs font-medium text-gray-600 mb-1">টেম্পলেট লিংক (URL)</label>
+                  <input 
+                    type="text" 
+                    placeholder="https://example.com/image.png"
+                    onChange={(e) => setTemplate(e.target.value)} 
+                    className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 outline-none" 
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-medium text-gray-600 mb-1">অথবা টেম্পলেট আপলোড করুন</label>
+                  <input 
+                    type="file" 
+                    accept="image/png, image/jpeg"
+                    onChange={handleTemplateUpload} 
+                    className="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-red-50 file:text-red-700 hover:file:bg-red-100" 
+                  />
                 </div>
               </div>
             </div>
