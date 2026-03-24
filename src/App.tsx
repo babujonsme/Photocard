@@ -3,12 +3,7 @@ import { toPng } from 'html-to-image';
 import { Upload, Download, Image as ImageIcon, Sparkles, Move, Settings2, Trash2 } from 'lucide-react';
 
 export default function App() {
-  const [template, setTemplate] = useState<string | null>(() => {
-    if (typeof window !== 'undefined') {
-      return localStorage.getItem('newsCardTemplate');
-    }
-    return null;
-  });
+  const template = '/template.png';
   const [photo, setPhoto] = useState<string | null>(null);
   
   // Text states
@@ -114,28 +109,6 @@ export default function App() {
     return formatted.replace(',', ''); // e.g., "১৯ মার্চ ২০২৬"
   };
 
-  const handleTemplateUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        const result = reader.result as string;
-        setTemplate(result);
-        try {
-          localStorage.setItem('newsCardTemplate', result);
-        } catch (err) {
-          console.error('Could not save template to local storage. File might be too large.', err);
-        }
-      };
-      reader.readAsDataURL(file);
-    }
-  };
-
-  const removeTemplate = () => {
-    setTemplate(null);
-    localStorage.removeItem('newsCardTemplate');
-  };
-
   const handlePhotoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
@@ -182,32 +155,13 @@ export default function App() {
           <div className="lg:col-span-5 space-y-6 bg-white p-6 rounded-2xl shadow-sm border border-gray-200 h-fit order-2 lg:order-1">
             
             {/* File Uploads */}
-            <div className="grid grid-cols-2 gap-4">
-              {/* Template Upload */}
-              <div className="space-y-2">
-                <label className="block text-sm font-semibold text-gray-700">১. PNG টেমপ্লেট</label>
-                {template ? (
-                  <div className="flex flex-col items-center justify-center w-full h-24 border-2 border-green-500 rounded-xl bg-green-50 relative overflow-hidden group">
-                    <span className="text-xs text-green-700 font-medium mb-2">টেম্পলেট সেভ করা আছে</span>
-                    <button onClick={removeTemplate} className="flex items-center gap-1 text-xs bg-red-100 text-red-600 px-3 py-1.5 rounded-md hover:bg-red-200 transition-colors font-medium">
-                      <Trash2 size={14} /> পরিবর্তন করুন
-                    </button>
-                  </div>
-                ) : (
-                  <label className="flex flex-col items-center justify-center w-full h-24 border-2 border-dashed border-gray-300 rounded-xl hover:border-red-500 hover:bg-red-50 cursor-pointer transition-all">
-                    <Upload className="w-6 h-6 text-gray-400 mb-1" />
-                    <span className="text-xs text-gray-600 font-medium">টেম্পলেট আপলোড</span>
-                    <input type="file" accept="image/png" className="hidden" onChange={handleTemplateUpload} />
-                  </label>
-                )}
-              </div>
-
+            <div className="grid grid-cols-1 gap-4">
               {/* Photo Upload */}
               <div className="space-y-2">
-                <label className="block text-sm font-semibold text-gray-700">২. মূল ছবি</label>
+                <label className="block text-sm font-semibold text-gray-700">১. মূল ছবি</label>
                 <label className="flex flex-col items-center justify-center w-full h-24 border-2 border-dashed border-gray-300 rounded-xl hover:border-blue-500 hover:bg-blue-50 cursor-pointer transition-all">
                   <ImageIcon className="w-6 h-6 text-gray-400 mb-1" />
-                  <span className="text-xs text-gray-600 font-medium">ছবি আপলোড</span>
+                  <span className="text-xs text-gray-600 font-medium">ছবি আপলোড করুন</span>
                   <input type="file" accept="image/*" className="hidden" onChange={handlePhotoUpload} />
                 </label>
               </div>
@@ -246,7 +200,7 @@ export default function App() {
 
             {/* Text Inputs */}
             <div className="space-y-4 pt-2">
-              <h3 className="text-sm font-semibold text-gray-700 border-b pb-2">৩. লেখা পরিবর্তন করুন</h3>
+              <h3 className="text-sm font-semibold text-gray-700 border-b pb-2">২. লেখা পরিবর্তন করুন</h3>
               
               <div className="grid grid-cols-1 gap-4">
                 <div>
@@ -327,20 +281,12 @@ export default function App() {
                 )}
 
                 {/* 2. Template (Middle Layer) */}
-                {template ? (
-                  <img 
-                    src={template} 
-                    alt="Template" 
-                    className="relative z-10 w-full h-auto pointer-events-none"
-                    crossOrigin="anonymous"
-                  />
-                ) : (
-                  <div className="relative z-10 w-full h-full min-h-[480px] flex items-center justify-center pointer-events-none border-4 border-dashed border-gray-300 m-4 rounded-xl">
-                    <div className="bg-white/80 px-4 py-2 rounded-lg backdrop-blur-sm text-gray-600 font-semibold">
-                      PNG টেমপ্লেট আপলোড করুন
-                    </div>
-                  </div>
-                )}
+                <img 
+                  src={template} 
+                  alt="Template" 
+                  className="relative z-10 w-full h-auto pointer-events-none"
+                  crossOrigin="anonymous"
+                />
 
                 {/* 3. Texts (Top Layer) */}
                 <div className="absolute inset-0 z-20 pointer-events-none">
