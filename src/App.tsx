@@ -13,9 +13,7 @@ export default function App() {
   
   // Text states
   const [locationName, setLocationName] = useState('পটুয়াখালী');
-  const [website, setWebsite] = useState('www.channelabd.com');
-  const [headlineWhite, setHeadlineWhite] = useState('কলাপাড়ায় উন্নত বীজ ও');
-  const [headlineYellow, setHeadlineYellow] = useState('আধুনিক কৃষি প্রযুক্তি নিয়ে মাঠ দিবস অনুষ্ঠিত');
+  const [headline, setHeadline] = useState('কলাপাড়ায় উন্নত বীজ ও আধুনিক কৃষি প্রযুক্তি নিয়ে মাঠ দিবস অনুষ্ঠিত');
   
   // Photo positioning states
   const [photoScale, setPhotoScale] = useState(100);
@@ -174,9 +172,9 @@ export default function App() {
         <div className="text-center mb-8">
           <h1 className="text-3xl font-bold text-gray-900 flex items-center justify-center gap-3">
             <Sparkles className="text-red-600" size={28} />
-            নিউজ কার্ড জেনারেটর
+            দৈনিক কাগজের ডাক
           </h1>
-          <p className="mt-2 text-gray-600">আপনার PNG টেমপ্লেট এবং ছবি আপলোড করে কাস্টম নিউজ কার্ড তৈরি করুন</p>
+          <p className="mt-2 text-gray-600">তৈরিতে: মোঃ আল আমিন বাবু (কালের কণ্ঠ)</p>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
@@ -250,25 +248,16 @@ export default function App() {
             <div className="space-y-4 pt-2">
               <h3 className="text-sm font-semibold text-gray-700 border-b pb-2">৩. লেখা পরিবর্তন করুন</h3>
               
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 gap-4">
                 <div>
                   <label className="block text-xs font-medium text-gray-600 mb-1">স্থান (তারিখ অটোমেটিক)</label>
                   <input type="text" value={locationName} onChange={(e) => setLocationName(e.target.value)} className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 outline-none" />
                 </div>
-                <div>
-                  <label className="block text-xs font-medium text-gray-600 mb-1">ওয়েবসাইট (উপরে ডানে)</label>
-                  <input type="text" value={website} onChange={(e) => setWebsite(e.target.value)} className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 outline-none" />
-                </div>
               </div>
 
               <div>
-                <label className="block text-xs font-medium text-gray-600 mb-1">প্রধান শিরোনাম (সাদা অংশ)</label>
-                <input type="text" value={headlineWhite} onChange={(e) => setHeadlineWhite(e.target.value)} className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 outline-none" />
-              </div>
-
-              <div>
-                <label className="block text-xs font-medium text-gray-600 mb-1">প্রধান শিরোনাম (হলুদ অংশ)</label>
-                <textarea value={headlineYellow} onChange={(e) => setHeadlineYellow(e.target.value)} rows={2} className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 outline-none resize-none" />
+                <label className="block text-xs font-medium text-gray-600 mb-1">প্রধান শিরোনাম</label>
+                <input type="text" value={headline} onChange={(e) => setHeadline(e.target.value)} className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 outline-none" />
               </div>
             </div>
 
@@ -355,19 +344,19 @@ export default function App() {
 
                 {/* 3. Texts (Top Layer) */}
                 <div className="absolute inset-0 z-20 pointer-events-none">
-                  {/* Top Left Location */}
-                  <div className="absolute top-[3%] left-[4%] text-white font-semibold text-[3vw] sm:text-[1.2rem] drop-shadow-md tracking-wide">
+                  {/* Top Right Location */}
+                  <div className="absolute top-[3%] right-[4%] text-white font-semibold text-[3vw] sm:text-[1.2rem] drop-shadow-md tracking-wide">
                     {locationName} | {getBengaliDate()}
                   </div>
                   
-                  {/* Top Right Website */}
-                  <div className="absolute top-[3%] right-[4%] text-white font-semibold text-[3vw] sm:text-[1.2rem] drop-shadow-md tracking-wide">
-                    {website}
+                  {/* Bottom Right Website */}
+                  <div className="absolute bottom-[4.5%] right-[4%] text-white font-semibold text-[2vw] sm:text-[0.85rem] drop-shadow-md tracking-wide">
+                    dailykagojerdak.com
                   </div>
 
                   {/* Main Headline Area */}
                   <div 
-                    className="absolute w-full text-center px-4 sm:px-10 flex flex-col gap-2 cursor-move pointer-events-auto hover:ring-2 hover:ring-dashed hover:ring-white/50 rounded-lg transition-shadow"
+                    className="absolute w-full text-center px-4 sm:px-10 flex flex-col gap-2 cursor-move pointer-events-auto hover:ring-2 hover:ring-dashed hover:ring-black/50 rounded-lg transition-shadow"
                     style={{
                       left: `${textX}%`,
                       top: `${textY}%`,
@@ -378,8 +367,8 @@ export default function App() {
                     onTouchStart={handleTextTouchStart}
                     onWheel={handleTextWheel}
                   >
-                    <h2 className="text-white font-bold text-[5vw] sm:text-[2.2rem] drop-shadow-lg leading-[1.4] pointer-events-none">
-                      {headlineWhite} <span className="text-[#ffde00]">{headlineYellow}</span>
+                    <h2 className="text-black font-bold text-[5vw] sm:text-[2.2rem] drop-shadow-md leading-[1.4] pointer-events-none break-words whitespace-normal text-center">
+                      {headline}
                     </h2>
                   </div>
                 </div>
