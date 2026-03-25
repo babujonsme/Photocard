@@ -3,7 +3,7 @@ import { toPng } from 'html-to-image';
 import { Upload, Download, Image as ImageIcon, Move, Settings2, Trash2, Edit3, MapPin, Type, SlidersHorizontal } from 'lucide-react';
 
 export default function App() {
-  const [template, setTemplate] = useState<string>('https://i.imgur.com/mhoc5JH.png');
+  const [template, setTemplate] = useState<string>('https://i.imgur.com/qrNbdji.png');
   const [photo, setPhoto] = useState<string | null>(null);
   
   // Text states
@@ -296,7 +296,7 @@ export default function App() {
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 py-8 px-4 sm:px-6 lg:px-8 font-sans selection:bg-red-100 selection:text-red-900">
       <div className="max-w-7xl mx-auto">
         {/* Header Section */}
-        <div className="text-center mb-10 space-y-3">
+        <div className="text-center mb-10 space-y-3 relative">
           <div className="inline-block">
             <h1 className="text-4xl md:text-5xl font-extrabold text-slate-900 tracking-tight">
               দৈনিক কাগজের ডাক
@@ -306,6 +306,21 @@ export default function App() {
           <p className="text-slate-500 font-medium text-sm md:text-base">
             তৈরিতে: <span className="text-slate-700 font-semibold">মোঃ আল আমিন বাবু</span> (কালের কণ্ঠ)
           </p>
+          
+          <div className="absolute top-0 right-0 hidden md:block">
+            <label className="flex items-center gap-2 px-4 py-2 bg-white border border-slate-200 rounded-lg shadow-sm hover:bg-slate-50 cursor-pointer transition-colors text-sm font-medium text-slate-600">
+              <Upload size={16} />
+              <span>টেমপ্লেট পরিবর্তন করুন</span>
+              <input type="file" accept="image/*" className="hidden" onChange={handleTemplateUpload} />
+            </label>
+          </div>
+          <div className="flex justify-center mt-4 md:hidden">
+            <label className="flex items-center gap-2 px-4 py-2 bg-white border border-slate-200 rounded-lg shadow-sm hover:bg-slate-50 cursor-pointer transition-colors text-sm font-medium text-slate-600">
+              <Upload size={16} />
+              <span>টেমপ্লেট পরিবর্তন করুন</span>
+              <input type="file" accept="image/*" className="hidden" onChange={handleTemplateUpload} />
+            </label>
+          </div>
         </div>
 
         <div className="flex flex-col lg:grid lg:grid-cols-12 gap-8 lg:gap-12 items-start">
